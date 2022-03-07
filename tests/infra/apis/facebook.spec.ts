@@ -22,6 +22,7 @@ describe('FacebookApi', () => {
       name: 'any_fb_name',
       email: 'any_fb_email'
     })
+
     sut = new FacebookApi(httpClient, clientId, clientSecret)
   })
 
