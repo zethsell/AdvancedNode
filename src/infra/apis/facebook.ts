@@ -1,4 +1,4 @@
-import { HttpGetClient } from '@/infra/https'
+import { HttpGetClient } from '@/infra/http'
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
 
 type AppToken = {
