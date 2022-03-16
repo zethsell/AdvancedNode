@@ -1,10 +1,10 @@
 import { makeJwtTokenGenerator } from '@/main/factories/crypto'
 import { makeFacebookApi } from '@/main/factories/api'
-import { FacebookAuthenticationUseCase } from '@/domain/usecases'
+import { setupFacebookAuthentication, FacebookAuthentication } from '@/domain/usecases'
 import { makePgUserAccountRepo } from '@/main/factories/repos'
 
-export const makeFacebookAuthentication = (): FacebookAuthenticationUseCase => {
-  return new FacebookAuthenticationUseCase(
+export const makeFacebookAuthentication = (): FacebookAuthentication => {
+  return setupFacebookAuthentication(
     makeFacebookApi(),
     makePgUserAccountRepo(),
     makeJwtTokenGenerator()
