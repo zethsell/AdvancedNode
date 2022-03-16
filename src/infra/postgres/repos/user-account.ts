@@ -1,5 +1,5 @@
 import { PgUser } from '@/infra/postgres/entities/user'
-import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@/data/contracts/repos'
+import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@/domain/contracts/repos'
 
 import { getRepository } from 'typeorm'
 
