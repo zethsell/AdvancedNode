@@ -15,7 +15,7 @@ describe('', () => {
     )
   })
   it('should return a Facebook User if token is valid', async () => {
-    const fbUser = await sut.loadUser({ token: 'EAAHKu5r7vPIBAAhRU0qk8FhvZBA5nGsmnYa8kTnRKmKZAJxKCeGdDLkilNzmScXmrzZCAvz65ZCK6TSyZBdttc28TZAQYHejT28E61e1Xc3PIZAiI51ZBYylZAZBwsjLWZCiSHlSCwadqP24H9L0k9LWMbzSOPo35rXWxjqZAJebj9RenLgp0NT8xp24884ZAKzZB3rQnfXQU0Tlo2XgZDZD' })
+    const fbUser = await sut.loadUser({ token: 'EAAHKu5r7vPIBAB9hfsNTEiVJoLZBjGiVlQUdn3msx0ZAvHZAwfL46wT4CZAZCntfb0GwIBNZCzVzFzVi5P1Ix8G9tZCdjWZBbsbVJuOwtaPZBMhscolZCivMLlOeB99KSMXBdp8Rf3Uyvc2TDZCnkNtnmTzXCwRTLqO6xF5zZCAmyWDZBDE0ZBxKNlJxXGsxvpZAiffnGDnoe4miL6q9gZDZD' })
 
     expect(fbUser).toEqual({
       facebookId: '105242485459312',
