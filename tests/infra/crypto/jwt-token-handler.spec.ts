@@ -6,33 +6,47 @@ jest.mock('jsonwebtoken')
 describe('JwtTokenHandler', () => {
   let sut: JwtTokenHandler
   let fakeJwt: jest.Mocked<typeof jwt>
+  let secret: string
 
   beforeAll(() => {
     fakeJwt = jwt as jest.Mocked<typeof jwt>
-    fakeJwt.sign.mockImplementation(() => 'any_token')
+    secret = 'any_secret'
   })
 
   beforeEach(() => {
     sut = new JwtTokenHandler('any_secret')
   })
 
-  it('should call sign with correct params', async () => {
-    await sut.generateToken({ key: 'any_key', expirationInMs: 1000 })
+  describe('Generate Token', () => {
+    let key: string
+    let token: string
+    let expirationInMs: number
 
-    expect(fakeJwt.sign).toHaveBeenLastCalledWith({ key: 'any_key' }, 'any_secret', { expiresIn: 1 })
-  })
+    beforeAll(() => {
+      key = 'any_key'
+      token = 'any_token'
+      expirationInMs = 1000
+      fakeJwt.sign.mockImplementation(() => token)
+    })
 
-  it('should return a token', async () => {
-    const token = await sut.generateToken({ key: 'any_key', expirationInMs: 1000 })
+    it('should call sign with correct params', async () => {
+      await sut.generateToken({ key, expirationInMs })
 
-    expect(token).toBe('any_token')
-  })
+      expect(fakeJwt.sign).toHaveBeenLastCalledWith({ key }, secret, { expiresIn: 1 })
+    })
 
-  it('should rethrow if sign throws', async () => {
-    fakeJwt.sign.mockImplementationOnce(() => { throw new Error('token_error') })
+    it('should return a token', async () => {
+      const generatedToken = await sut.generateToken({ key, expirationInMs })
 
-    const promise = sut.generateToken({ key: 'any_key', expirationInMs: 1000 })
+      expect(generatedToken).toBe(token)
+    })
 
-    await expect(promise).rejects.toThrow(new Error('token_error'))
+    it('should rethrow if sign throws', async () => {
+      fakeJwt.sign.mockImplementationOnce(() => { throw new Error('token_error') })
+
+      const promise = sut.generateToken({ key, expirationInMs })
+
+      await expect(promise).rejects.toThrow(new Error('token_error'))
+    })
   })
 })
