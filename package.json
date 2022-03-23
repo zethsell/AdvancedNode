@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/main",
+    "start": "node -r dotenv/config dist/main",
+    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config --inspect=0.0.0.0:9229 src/main",
     "build": "rimraf dist && npx tsc -p tsconfig-build.json",
     "lint": "npx eslint . --no-error-on-unmatched-pattern",
     "lint:fix": "npm run lint -- --fix",
@@ -43,6 +44,7 @@
     "rimraf": "^3.0.2",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.3",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.2"
   },
   "engines": {
