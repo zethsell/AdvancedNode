@@ -40,7 +40,7 @@ describe('FacebookAuthentication', () => {
     )
   })
 
-  it('should call LoadFacebookPi with correct parameters', async () => {
+  it('should call LoadFacebookApi with correct parameters', async () => {
     await sut({ token })
 
     expect(facebookApi.loadUser).toHaveBeenCalledWith({ token })
