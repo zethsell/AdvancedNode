@@ -1,3 +1,4 @@
+export * from './aws-s3-file-storage'
 export * from './facebook-api'
 export * from './jwt-token-handler'
 export * from './unique-id'
