@@ -11,6 +11,12 @@ export class PgUser {
   @Column()
   email!: string
 
+  @Column({ name: 'foto', nullable: true })
+  pictureUrl?: string
+
+  @Column({ name: 'iniciais', nullable: true })
+  initials?: string
+
   @Column({ name: 'id_facebook', nullable: true })
   facebookId?: string
 }
