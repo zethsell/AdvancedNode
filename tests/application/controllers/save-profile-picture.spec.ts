@@ -1,5 +1,5 @@
 import { Controller, SavePictureController } from '@/application/controllers'
-import { InvalidMymeTypeError, MaxFileSizeError, RequiredFieldError } from '@/application/errors'
+import { InvalidMimeTypeError, MaxFileSizeError, RequiredFieldError } from '@/application/errors'
 
 describe('SaveProfileController', () => {
   let sut: SavePictureController
@@ -49,7 +49,7 @@ describe('SaveProfileController', () => {
     const httpResponse = await sut.handle({ file: { buffer, mimeType: 'invalid_type' }, userId })
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new InvalidMymeTypeError(['jpeg', 'png'])
+      data: new InvalidMimeTypeError(['jpeg', 'png'])
     })
   })
 
@@ -57,7 +57,7 @@ describe('SaveProfileController', () => {
     const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/png' }, userId })
     expect(httpResponse).not.toEqual({
       statusCode: 400,
-      data: new InvalidMymeTypeError(['jpeg', 'png'])
+      data: new InvalidMimeTypeError(['jpeg', 'png'])
     })
   })
 
@@ -65,7 +65,7 @@ describe('SaveProfileController', () => {
     const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpg' }, userId })
     expect(httpResponse).not.toEqual({
       statusCode: 400,
-      data: new InvalidMymeTypeError(['jpeg', 'png'])
+      data: new InvalidMimeTypeError(['jpeg', 'png'])
     })
   })
 
@@ -73,7 +73,7 @@ describe('SaveProfileController', () => {
     const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpeg' }, userId })
     expect(httpResponse).not.toEqual({
       statusCode: 400,
-      data: new InvalidMymeTypeError(['jpeg', 'png'])
+      data: new InvalidMimeTypeError(['jpeg', 'png'])
     })
   })
 

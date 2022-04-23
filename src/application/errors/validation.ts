@@ -8,10 +8,10 @@ export class RequiredFieldError extends Error {
   }
 }
 
-export class InvalidMymeTypeError extends Error {
+export class InvalidMimeTypeError extends Error {
   constructor (allowed: string[]) {
     super(`Unsupported type. Allowed types: ${allowed.join(', ')}`)
-    this.name = 'InvalidMymeTypeError'
+    this.name = 'InvalidMimeTypeError'
   }
 }
 export class MaxFileSizeError extends Error {
