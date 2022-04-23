@@ -29,6 +29,7 @@ describe('FacebookLoginController', () => {
       new RequiredString('any_token', 'token')
     ])
   })
+
   it('should call FacebookAuthentication with correct params', async () => {
     await sut.handle({ token })
 
