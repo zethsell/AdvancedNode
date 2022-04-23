@@ -1,4 +1,4 @@
-import { SavePictureController } from '@/application/controllers'
+import { Controller, SavePictureController } from '@/application/controllers'
 import { InvalidMymeTypeError, MaxFileSizeError, RequiredFieldError } from '@/application/errors'
 
 describe('SaveProfileController', () => {
@@ -98,5 +98,9 @@ describe('SaveProfileController', () => {
       statusCode: 200,
       data: { initials: 'any_initials', pictureUrl: 'any_url' }
     })
+  })
+
+  it('should extend controoler', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 })
