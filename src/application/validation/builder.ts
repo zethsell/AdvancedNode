@@ -6,9 +6,9 @@ export class ValidationBuilder {
     private readonly value: any,
     private readonly fieldName?: string,
     private readonly validators: Validator[] = []
-  ) {}
+  ) { }
 
-  static of ({ value, fieldName }: { value: any, fieldName?: string}): ValidationBuilder {
+  static of ({ value, fieldName }: { value: any, fieldName?: string }): ValidationBuilder {
     return new ValidationBuilder(value, fieldName)
   }
 
@@ -26,7 +26,7 @@ export class ValidationBuilder {
     return this
   }
 
-  image ({ allowed, maxSizeInMb }: {allowed: Extension[], maxSizeInMb: number}): ValidationBuilder {
+  image ({ allowed, maxSizeInMb }: { allowed: Extension[], maxSizeInMb: number }): ValidationBuilder {
     if (this.value.mimeType !== undefined) {
       this.validators.push(new AllowedMimeTypes(allowed, this.value.mimeType))
     }
