@@ -9,7 +9,9 @@ jest.mock('@/domain/entities/user-profile')
 
 describe('Change profile picture', () => {
   let uuid: string
-  let file: Buffer
+  let file: { buffer: Buffer, mimeType: string }
+  let buffer: Buffer
+  let mimeType: string
   let fileStorage: MockProxy<UploadFile & DeleteFile>
   let crypto: MockProxy<UUIDGenerator>
   let userProfileRepo: MockProxy<SaveUserPicture & LoadUserProfile>
@@ -17,7 +19,9 @@ describe('Change profile picture', () => {
 
   beforeAll(() => {
     uuid = 'any_unique_id'
-    file = Buffer.from('any_buffer')
+    buffer = Buffer.from('any_buffer')
+    mimeType = 'image/png'
+    file = { buffer, mimeType }
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue('any_url')
     userProfileRepo = mock()
@@ -31,9 +35,15 @@ describe('Change profile picture', () => {
   })
 
   it('should call uploadFile with correct input', async () => {
-    await sut({ id: 'any_id', file })
+    await sut({ id: 'any_id', file: { buffer, mimeType: 'image/png' } })
 
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file, key: uuid })
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, filename: `${uuid}.png` })
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
+  it('should call uploadFile with correct input', async () => {
+    await sut({ id: 'any_id', file: { buffer, mimeType: 'image/jpeg' } })
+
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, filename: `${uuid}.jpeg` })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 
@@ -93,7 +103,7 @@ describe('Change profile picture', () => {
     const promise = sut({ id: 'any_id', file })
 
     promise.catch(() => {
-      expect(fileStorage.delete).toHaveBeenCalledWith({ key: uuid })
+      expect(fileStorage.delete).toHaveBeenCalledWith({ filename: uuid })
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })
@@ -104,7 +114,7 @@ describe('Change profile picture', () => {
     const promise = sut({ id: 'any_id', file: undefined })
 
     promise.catch(() => {
-      expect(fileStorage.delete).not.toHaveBeenCalledWith({ key: uuid })
+      expect(fileStorage.delete).not.toHaveBeenCalledWith({ filename: uuid })
     })
   })
 

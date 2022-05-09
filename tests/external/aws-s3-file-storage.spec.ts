@@ -18,13 +18,13 @@ describe('Aws s3 integration tests', () => {
   // it('should upload an delete image', async () => {
   //  const fileBase64 = 'teste' //necessario te um base64 real
   //  const file = Buffer.from(fileBase64, 'base64')
-  //  const key = 'any_key.png'
+  //  const filename = 'filename.png'
   //
-  //  const fileUrl = await sut.upload({ key, file })
+  //  const fileUrl = await sut.upload({ filename, file })
   //
   //  expect((await axios.get(fileUrl)).status).toBe(200)
   //
-  //  await sut.delete({ key })
+  //  await sut.delete({ filename })
   //
   //  await expect(axios.get(fileUrl)).rejects.toThrow()
   //  })
