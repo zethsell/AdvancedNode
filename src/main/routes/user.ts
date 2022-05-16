@@ -1,9 +1,9 @@
 import { auth } from '@/main/middlewares/authentication'
 import { Router } from 'express'
 import { makeSavePictureController } from '@/main/factories/controllers'
-import { adaptExpressRoute as adapt } from '@/main/adapters'
+import { adaptExpressRoute as adapt, adaptMulter as upload } from '@/main/adapters'
 
 export default (router: Router): void => {
   router.delete('/users/picture', auth, adapt(makeSavePictureController()))
-  router.put('/users/picture', auth)
+  router.put('/users/picture', auth, upload, adapt(makeSavePictureController()))
 }
