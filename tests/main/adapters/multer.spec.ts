@@ -37,7 +37,6 @@ describe('MulterAdapter', () => {
 
   it('Should call single upload with correct input', () => {
     sut(req, res, next)
-
     expect(multerSpy).toHaveBeenCalledWith()
     expect(multerSpy).toHaveBeenCalledTimes(1)
     expect(singleSpy).toHaveBeenCalledWith('picture')
@@ -52,7 +51,6 @@ describe('MulterAdapter', () => {
       next(error)
     })
     sut(req, res, next)
-
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.status).toHaveBeenCalledTimes(1)
     expect(res.json).toHaveBeenCalledWith({ error: new ServerError(error).message })
@@ -79,7 +77,6 @@ describe('MulterAdapter', () => {
 
   it('Should  call next on sucess', () => {
     sut(req, res, next)
-
     expect(next).toHaveBeenCalledWith()
     expect(next).toHaveBeenCalledTimes(1)
   })
