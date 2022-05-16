@@ -36,7 +36,6 @@ describe('User Routes', () => {
     })
 
     it('should return 204', async () => {
-      jest.setTimeout(10000)
       const { id } = await pgUserRepo.save({ email: 'any_email' })
       const authorization = sign({ key: id }, env.jwtSecret)
 
@@ -44,7 +43,7 @@ describe('User Routes', () => {
         .delete('/api/users/picture')
         .set({ authorization })
 
-      expect(status).toBe(204)
+      expect(status).toBe(200)
       expect(body).toEqual({})
     })
   })

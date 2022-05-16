@@ -21,7 +21,7 @@ describe('SaveProfileController', () => {
     sut = new SavePictureController(changeProfilePicture)
   })
 
-  it('should build validators correctly', async () => {
+  it('should build validators correctly on save', async () => {
     const validators = await sut.buildValidators({ file, userId })
 
     expect(validators).toEqual([
@@ -30,6 +30,12 @@ describe('SaveProfileController', () => {
       new AllowedMimeTypes(['png', 'jpg'], mimeType),
       new MaxFileSize(5, buffer)
     ])
+  })
+
+  it('should build validators correctly on delete', async () => {
+    const validators = await sut.buildValidators({ file: undefined, userId })
+
+    expect(validators).toEqual([])
   })
 
   it('should call changeProfilePicture with correct input', async () => {
