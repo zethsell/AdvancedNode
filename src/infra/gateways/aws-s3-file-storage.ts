@@ -1,8 +1,6 @@
 import { config, S3 } from 'aws-sdk'
 import { UploadFile, DeleteFile } from '@/domain/contracts/gateways'
 
-jest.mock('aws-sdk')
-
 export class AwsS3FileStorage implements UploadFile, DeleteFile {
   constructor (accessKey: string, secret: string, private readonly bucket: string) {
     config.update({
