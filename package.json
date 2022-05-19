@@ -43,6 +43,7 @@
     "jest": "^27.5.1",
     "jest-mock-extended": "^2.0.5",
     "lint-staged": "^12.4.0",
+    "mockdate": "^3.0.5",
     "module-alias": "^2.2.2",
     "pg-mem": "^2.3.5",
     "rimraf": "^3.0.2",
