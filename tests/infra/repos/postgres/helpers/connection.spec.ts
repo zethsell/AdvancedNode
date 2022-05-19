@@ -1,3 +1,4 @@
+import { PgUser } from '@/infra/repos/postgres/entities'
 import { ConnectionNotFoundError, PgConnection } from '@/infra/repos/postgres/helpers'
 import { mocked } from 'jest-mock'
 import { createConnection, getConnectionManager, getConnection } from 'typeorm'
@@ -22,6 +23,7 @@ describe('PgConnection', () => {
   let releaseSpy: jest.Mock
   let commitTransactionSpy: jest.Mock
   let rollbackTransactionSpy: jest.Mock
+  let getRepositorySpy: jest.Mock
   let sut: PgConnection
 
   beforeAll(() => {
@@ -32,11 +34,13 @@ describe('PgConnection', () => {
     releaseSpy = jest.fn()
     commitTransactionSpy = jest.fn()
     rollbackTransactionSpy = jest.fn()
+    getRepositorySpy = jest.fn().mockReturnValue('any_repo')
     createQueryRunnerSpy = jest.fn().mockReturnValue({
       startTransaction: startTransactionSpy,
-      release: releaseSpy,
       commitTransaction: commitTransactionSpy,
-      rollbackTransaction: rollbackTransactionSpy
+      rollbackTransaction: rollbackTransactionSpy,
+      release: releaseSpy,
+      manager: { getRepository: getRepositorySpy }
     })
     createConnectionSpy = jest.fn().mockResolvedValue({ createQueryRunner: createQueryRunnerSpy })
     mocked(createConnection).mockImplementation(createConnectionSpy)
@@ -141,5 +145,19 @@ describe('PgConnection', () => {
     const promise = sut.rollback()
     expect(rollbackTransactionSpy).not.toHaveBeenCalled()
     await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
+  })
+
+  it('should get repository', async () => {
+    await sut.connect()
+    const repository = sut.getRepository(PgUser)
+    expect(getRepositorySpy).toHaveBeenCalledWith(PgUser)
+    expect(getRepositorySpy).toHaveBeenCalledTimes(1)
+    expect(repository).toBe('any_repo')
+    await sut.disconnect()
+  })
+
+  it('should return ConnectionNotFoundError on get repository if coneection is not found', async () => {
+    expect(rollbackTransactionSpy).not.toHaveBeenCalled()
+    expect(() => sut.getRepository(PgUser)).toThrow(new ConnectionNotFoundError())
   })
 })
