@@ -1,5 +1,6 @@
+import { ConnectionNotFoundError, PgConnection } from '@/infra/repos/postgres/helpers'
 import { mocked } from 'jest-mock'
-import { createConnection, getConnectionManager, getConnection, QueryRunner } from 'typeorm'
+import { createConnection, getConnectionManager, getConnection } from 'typeorm'
 
 jest.mock('typeorm', () => ({
   Entity: jest.fn(),
@@ -9,37 +10,6 @@ jest.mock('typeorm', () => ({
   getConnection: jest.fn(),
   getConnectionManager: jest.fn()
 }))
-
-class ConnectionNotFoundError extends Error {
-  constructor () {
-    super('No Connection was found')
-    this.name = 'ConnectionNotFoundError'
-  }
-}
-
-class PgConnection {
-  private static instance?: PgConnection
-  private query?: QueryRunner
-  private constructor () { }
-
-  static getInstance (): PgConnection {
-    if (PgConnection.instance === undefined) PgConnection.instance = new PgConnection()
-    return PgConnection.instance
-  }
-
-  async connect (): Promise<void> {
-    const connection = getConnectionManager().has('default')
-      ? getConnection()
-      : await createConnection()
-    this.query = connection.createQueryRunner()
-  }
-
-  async disconnect (): Promise<void> {
-    if (this.query === undefined) throw new ConnectionNotFoundError()
-    await getConnection().close()
-    this.query = undefined
-  }
-}
 
 describe('PgConnection', () => {
   let getConnectionManagerSpy: jest.Mock
