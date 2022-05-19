@@ -3,20 +3,23 @@ import { sign } from 'jsonwebtoken'
 import { PgUser } from '@/infra/repos/postgres/entities'
 import { app } from '@/main/config/app'
 import { makeFakeDb } from '@/tests/infra/repos/postgres/mocks'
-import { getConnection, getRepository, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 
 import { IBackup } from 'pg-mem'
 
 import request from 'supertest'
+import { PgConnection } from '@/infra/repos/postgres/helpers'
 
 describe('User Routes', () => {
   let backup: IBackup
   let pgUserRepo: Repository<PgUser>
+  let connection: PgConnection
 
   beforeAll(async () => {
     const db = await makeFakeDb([PgUser])
     backup = db.backup()
-    pgUserRepo = getRepository(PgUser)
+    connection = PgConnection.getInstance()
+    pgUserRepo = connection.getRepository(PgUser)
   })
 
   beforeEach(() => {
@@ -24,7 +27,7 @@ describe('User Routes', () => {
   })
 
   afterAll(async () => {
-    await getConnection().close()
+    await connection.disconnect()
   })
 
   describe('DELETE /users/picture', () => {
