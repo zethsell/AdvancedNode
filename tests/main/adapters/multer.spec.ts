@@ -25,7 +25,7 @@ describe('MulterAdapter', () => {
     singleSpy = jest.fn().mockImplementation(() => uploadSpy)
     multerSpy = jest.fn().mockImplementation(() => ({ single: singleSpy }))
     fakeMulter = multer as jest.Mocked<typeof multer>
-    mocked(fakeMulter).mockImplementation(multerSpy)
+    mocked(fakeMulter).mockImplementation(multerSpy as any)
     res = getMockRes().res
     next = getMockRes().next
   })
