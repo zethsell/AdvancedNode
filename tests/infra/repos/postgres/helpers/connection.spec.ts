@@ -1,5 +1,5 @@
 import { mocked } from 'jest-mock'
-import { Connection, createConnection, getConnectionManager, getConnection } from 'typeorm'
+import { createConnection, getConnectionManager, getConnection } from 'typeorm'
 
 jest.mock('typeorm', () => ({
   Entity: jest.fn(),
@@ -20,12 +20,9 @@ class PgConnection {
   }
 
   async connect (): Promise<void> {
-    let connection: Connection
-    if (getConnectionManager().has('default')) {
-      connection = getConnection()
-    } else {
-      connection = await createConnection()
-    }
+    const connection = getConnectionManager().has('default')
+      ? getConnection()
+      : await createConnection()
     connection.createQueryRunner()
   }
 }
