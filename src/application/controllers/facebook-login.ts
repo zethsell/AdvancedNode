@@ -1,11 +1,12 @@
-import { ValidationBuilder as builder, Validator } from '@/application/validation'
-import { HttpResponse, unauthorized, ok } from '@/application/helpers'
 import { Controller } from '@/application/controllers'
-import { FacebookAuthentication } from '@/domain/usecases'
+import { HttpResponse, unauthorized, ok } from '@/application/helpers'
+import { ValidationBuilder as Builder, Validator } from '@/application/validation'
+import { AuthenticationError } from '@/domain/entities'
+import { FacebookAuthentication } from '@/domain/use-cases'
 
 type HttpRequest = { token: string }
-
 type Model = Error | { accessToken: string }
+
 export class FacebookLoginController extends Controller {
   constructor (private readonly facebookAuthentication: FacebookAuthentication) {
     super()
@@ -15,14 +16,15 @@ export class FacebookLoginController extends Controller {
     try {
       const accessToken = await this.facebookAuthentication({ token })
       return ok(accessToken)
-    } catch {
-      return unauthorized()
+    } catch (error) {
+      if (error instanceof AuthenticationError) return unauthorized()
+      throw error
     }
   }
 
   override buildValidators ({ token }: HttpRequest): Validator[] {
     return [
-      ...builder.of({ value: token, fieldName: 'token' }).required().build()
+      ...Builder.of({ value: token, fieldName: 'token' }).required().build()
     ]
   }
 }

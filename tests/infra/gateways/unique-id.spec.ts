@@ -1,4 +1,5 @@
 import { UniqueId } from '@/infra/gateways'
+
 import { set, reset } from 'mockdate'
 
 describe('UniqueId', () => {
@@ -12,6 +13,7 @@ describe('UniqueId', () => {
   afterAll(() => {
     reset()
   })
+
   it('should create a unique id', () => {
     const uuid = sut.uuid({ key: 'any_key' })
 

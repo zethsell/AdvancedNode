@@ -6,7 +6,7 @@ export class AllowedMimeTypes {
   constructor (
     private readonly allowed: Extension[],
     private readonly mimeType: string
-  ) { }
+  ) {}
 
   validate (): Error | undefined {
     let isValid = false

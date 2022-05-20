@@ -1,8 +1,9 @@
 import { ServerError } from '@/application/errors'
 import { adaptMulter } from '@/main/adapters'
+
 import { getMockReq, getMockRes } from '@jest-mock/express'
-import { RequestHandler, NextFunction, Request, Response } from 'express'
-import { mocked } from 'jest-mock'
+import { RequestHandler, Request, Response, NextFunction } from 'express'
+import { mocked } from 'ts-jest/utils'
 import multer from 'multer'
 
 jest.mock('multer')
@@ -25,7 +26,7 @@ describe('MulterAdapter', () => {
     singleSpy = jest.fn().mockImplementation(() => uploadSpy)
     multerSpy = jest.fn().mockImplementation(() => ({ single: singleSpy }))
     fakeMulter = multer as jest.Mocked<typeof multer>
-    mocked(fakeMulter).mockImplementation(multerSpy as any)
+    mocked(fakeMulter).mockImplementation(multerSpy)
     res = getMockRes().res
     next = getMockRes().next
   })
@@ -35,8 +36,9 @@ describe('MulterAdapter', () => {
     sut = adaptMulter
   })
 
-  it('Should call single upload with correct input', () => {
+  it('should call single upload with correct input', () => {
     sut(req, res, next)
+
     expect(multerSpy).toHaveBeenCalledWith()
     expect(multerSpy).toHaveBeenCalledTimes(1)
     expect(singleSpy).toHaveBeenCalledWith('picture')
@@ -45,25 +47,31 @@ describe('MulterAdapter', () => {
     expect(uploadSpy).toHaveBeenCalledTimes(1)
   })
 
-  it('Should return 500 if upload fails', () => {
-    const error = new Error('multer error')
+  it('should return 500 if upload fails', () => {
+    const error = new Error('multer_error')
     uploadSpy.mockImplementationOnce((req, res, next) => {
       next(error)
     })
+
     sut(req, res, next)
+
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.status).toHaveBeenCalledTimes(1)
     expect(res.json).toHaveBeenCalledWith({ error: new ServerError(error).message })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
 
-  it('Should not add file to req.locals', () => {
-    uploadSpy.mockImplementationOnce((req, res, next) => { next() })
+  it('should not add file to req.locals', () => {
+    uploadSpy.mockImplementationOnce((req, res, next) => {
+      next()
+    })
+
     sut(req, res, next)
+
     expect(req.locals).toEqual({ anyLocals: 'any_locals' })
   })
 
-  it('Should  add file to req.locals', () => {
+  it('should add file to req.locals', () => {
     sut(req, res, next)
 
     expect(req.locals).toEqual({
@@ -75,8 +83,9 @@ describe('MulterAdapter', () => {
     })
   })
 
-  it('Should  call next on sucess', () => {
+  it('should call next on success', () => {
     sut(req, res, next)
+
     expect(next).toHaveBeenCalledWith()
     expect(next).toHaveBeenCalledTimes(1)
   })

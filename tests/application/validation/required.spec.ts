@@ -1,5 +1,5 @@
 import { RequiredFieldError } from '@/application/errors'
-import { Required, RequiredBuffer, RequiredString } from '@/application/validation'
+import { Required, RequiredString, RequiredBuffer } from '@/application/validation'
 
 describe('Required', () => {
   it('should return RequiredFieldError if value is null', () => {
@@ -18,7 +18,7 @@ describe('Required', () => {
     expect(error).toEqual(new RequiredFieldError('any_field'))
   })
 
-  it('should return RequiredFieldError if value is valid', () => {
+  it('should return undefined if value is not empty', () => {
     const sut = new Required('any_value', 'any_field')
 
     const error = sut.validate()
@@ -42,7 +42,7 @@ describe('RequiredString', () => {
     expect(error).toEqual(new RequiredFieldError('any_field'))
   })
 
-  it('should return RequiredFieldError if value is valid', () => {
+  it('should return undefined if value is not empty', () => {
     const sut = new RequiredString('any_value', 'any_field')
 
     const error = sut.validate()
@@ -53,7 +53,7 @@ describe('RequiredString', () => {
 
 describe('RequiredBuffer', () => {
   it('should extend Required', () => {
-    const sut = new RequiredBuffer(Buffer.from(''))
+    const sut = new RequiredString('')
 
     expect(sut).toBeInstanceOf(Required)
   })
@@ -66,7 +66,7 @@ describe('RequiredBuffer', () => {
     expect(error).toEqual(new RequiredFieldError())
   })
 
-  it('should return RequiredFieldError if value is valid', () => {
+  it('should return undefined if value is not empty', () => {
     const sut = new RequiredBuffer(Buffer.from('any_buffer'))
 
     const error = sut.validate()

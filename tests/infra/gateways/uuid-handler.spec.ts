@@ -1,5 +1,6 @@
 import { UUIDHandler } from '@/infra/gateways'
-import { mocked } from 'jest-mock'
+
+import { mocked } from 'ts-jest/utils'
 import { v4 } from 'uuid'
 
 jest.mock('uuid')
@@ -7,12 +8,12 @@ jest.mock('uuid')
 describe('UUIDHandler', () => {
   let sut: UUIDHandler
 
-  beforeEach(() => {
-    sut = new UUIDHandler()
-  })
-
   beforeAll(() => {
     mocked(v4).mockReturnValue('any_uuid')
+  })
+
+  beforeEach(() => {
+    sut = new UUIDHandler()
   })
 
   it('should call uuid.v4', () => {

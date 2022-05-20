@@ -1,10 +1,9 @@
 export interface SaveUserPicture {
-  savePicture: (params: SaveUserPicture.Input) => Promise<void>
+  savePicture: (input: SaveUserPicture.Input) => Promise<void>
 }
 
 export namespace SaveUserPicture {
-  export type Input = { id: string, pictureUrl?: string, initials?: string}
-
+  export type Input = { id: string, pictureUrl?: string, initials?: string }
 }
 
 export interface LoadUserProfile {

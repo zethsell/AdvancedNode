@@ -1,35 +1,24 @@
 import { HttpGetClient } from '@/infra/gateways'
 import { LoadFacebookUser } from '@/domain/contracts/gateways'
 
-type AppToken = {
-  access_token: string
-}
+type AppToken = { access_token: string }
+type DebugToken = { data: { user_id: string } }
+type UserInfo = { id: string, name: string, email: string }
+type Input = LoadFacebookUser.Input
+type Output = LoadFacebookUser.Output
 
-type DebugToken = {
-  data: { user_id: string}
-}
-
-type UserInfo = {
-  id: string
-  name: string
-  email: string
-}
-
-type Params = LoadFacebookUser.Params
-type Result = LoadFacebookUser.Result
 export class FacebookApi implements LoadFacebookUser {
   private readonly baseUrl = 'https://graph.facebook.com'
+
   constructor (
     private readonly httpClient: HttpGetClient,
     private readonly clientId: string,
     private readonly clientSecret: string
-  ) {
+  ) {}
 
-  }
-
-  async loadUser ({ token }: Params): Promise<Result> {
-    return this.getuserInfo(token)
-      .then(({ id, name, email }) => ({ facebookId: id, name: name, email: email }))
+  async loadUser ({ token }: Input): Promise<Output> {
+    return this.getUserInfo(token)
+      .then(({ id, name, email }) => ({ facebookId: id, name, email }))
       .catch(() => undefined)
   }
 
@@ -55,7 +44,7 @@ export class FacebookApi implements LoadFacebookUser {
     })
   }
 
-  private async getuserInfo (clientToken: string): Promise<UserInfo> {
+  private async getUserInfo (clientToken: string): Promise<UserInfo> {
     const debugToken = await this.getDebugToken(clientToken)
     return this.httpClient.get({
       url: `${this.baseUrl}/${debugToken.data.user_id}`,

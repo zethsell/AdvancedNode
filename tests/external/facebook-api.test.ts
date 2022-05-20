@@ -1,9 +1,9 @@
-import { FacebookApi, AxiosHttpClient } from '@/infra/gateways'
 import { env } from '@/main/config/env'
+import { FacebookApi, AxiosHttpClient } from '@/infra/gateways'
 
-describe('', () => {
-  let sut: FacebookApi
+describe('Facebook Api Integration Tests', () => {
   let axiosClient: AxiosHttpClient
+  let sut: FacebookApi
 
   beforeEach(() => {
     axiosClient = new AxiosHttpClient()
@@ -13,23 +13,18 @@ describe('', () => {
       env.facebookApi.clientSecret
     )
   })
+
   it('should return a Facebook User if token is valid', async () => {
-    const fbUser = await sut.loadUser({ token: 'EAAHKu5r7vPIBAB9hfsNTEiVJoLZBjGiVlQUdn3msx0ZAvHZAwfL46wT4CZAZCntfb0GwIBNZCzVzFzVi5P1Ix8G9tZCdjWZBbsbVJuOwtaPZBMhscolZCivMLlOeB99KSMXBdp8Rf3Uyvc2TDZCnkNtnmTzXCwRTLqO6xF5zZCAmyWDZBDE0ZBxKNlJxXGsxvpZAiffnGDnoe4miL6q9gZDZD' })
+    const fbUser = await sut.loadUser({ token: env.facebookApi.accessToken })
 
     expect(fbUser).toEqual({
-      facebookId: '105242485459312',
-      email: 'zeth_hhkywhm_testes@tfbnw.net',
-      name: 'Zeth testes'
+      facebookId: '728079287908964',
+      email: 'mango_pgftrsp_dev@tfbnw.net',
+      name: 'Mango Dev'
     })
   })
 
-  it('should return undefined Facebook User if token is invalid', async () => {
-    axiosClient = new AxiosHttpClient()
-    sut = new FacebookApi(
-      axiosClient,
-      env.facebookApi.clientId,
-      env.facebookApi.clientSecret
-    )
+  it('should return undefined if token is invalid', async () => {
     const fbUser = await sut.loadUser({ token: 'invalid' })
 
     expect(fbUser).toBeUndefined()

@@ -1,3 +1,3 @@
 export * from './controller'
 export * from './facebook-login'
-export * from './save-picture-profile'
+export * from './save-picture'

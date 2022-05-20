@@ -1,4 +1,5 @@
-import { FacebookApi, HttpGetClient } from '@/infra/gateways'
+import { HttpGetClient, FacebookApi } from '@/infra/gateways'
+
 import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('FacebookApi', () => {
@@ -14,14 +15,10 @@ describe('FacebookApi', () => {
   })
 
   beforeEach(() => {
-    httpClient.get.mockResolvedValueOnce({ access_token: 'any_app_token' })
-    httpClient.get.mockResolvedValueOnce({ data: { user_id: 'any_user_id' } })
-    httpClient.get.mockResolvedValueOnce({
-      id: 'any_fb_id',
-      name: 'any_fb_name',
-      email: 'any_fb_email'
-    })
-
+    httpClient.get
+      .mockResolvedValueOnce({ access_token: 'any_app_token' })
+      .mockResolvedValueOnce({ data: { user_id: 'any_user_id' } })
+      .mockResolvedValueOnce({ id: 'any_fb_id', name: 'any_fb_name', email: 'any_fb_email' })
     sut = new FacebookApi(httpClient, clientId, clientSecret)
   })
 
@@ -63,9 +60,9 @@ describe('FacebookApi', () => {
   })
 
   it('should return facebook user', async () => {
-    const fbuser = await sut.loadUser({ token: 'any_client_token' })
+    const fbUser = await sut.loadUser({ token: 'any_client_token' })
 
-    expect(fbuser).toEqual({
+    expect(fbUser).toEqual({
       facebookId: 'any_fb_id',
       name: 'any_fb_name',
       email: 'any_fb_email'
@@ -73,10 +70,10 @@ describe('FacebookApi', () => {
   })
 
   it('should return undefined if HttpGetClient throws', async () => {
-    httpClient.get.mockReset().mockRejectedValueOnce(new Error('facebook_error'))
+    httpClient.get.mockReset().mockRejectedValueOnce(new Error('fb_error'))
 
-    const fbuser = await sut.loadUser({ token: 'any_client_token' })
+    const fbUser = await sut.loadUser({ token: 'any_client_token' })
 
-    expect(fbuser).toBeUndefined()
+    expect(fbUser).toBeUndefined()
   })
 })

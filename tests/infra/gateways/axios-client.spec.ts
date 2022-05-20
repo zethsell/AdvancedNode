@@ -1,4 +1,5 @@
 import { AxiosHttpClient } from '@/infra/gateways'
+
 import axios from 'axios'
 
 jest.mock('axios')
@@ -10,13 +11,13 @@ describe('AxiosHttpClient', () => {
   let params: object
 
   beforeAll(() => {
+    url = 'any_url'
+    params = { any: 'any' }
     fakeAxios = axios as jest.Mocked<typeof axios>
     fakeAxios.get.mockResolvedValue({
       status: 200,
       data: 'any_data'
     })
-    url = 'any_url'
-    params = { any: 'any' }
   })
 
   beforeEach(() => {
@@ -24,7 +25,7 @@ describe('AxiosHttpClient', () => {
   })
 
   describe('get', () => {
-    it('should call get with correct params', async () => {
+    it('should call get with correct input', async () => {
       await sut.get({ url, params })
 
       expect(fakeAxios.get).toHaveBeenCalledWith(url, { params })

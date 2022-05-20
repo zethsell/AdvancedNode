@@ -2,7 +2,7 @@ export class UserProfile {
   initials?: string
   pictureUrl?: string
 
-  constructor (readonly id: string) { }
+  constructor (readonly id: string) {}
 
   setPicture ({ pictureUrl, name }: { pictureUrl?: string, name?: string }): void {
     this.pictureUrl = pictureUrl
@@ -11,7 +11,7 @@ export class UserProfile {
       if (firstLetters.length > 1) {
         this.initials = `${firstLetters.shift()!.toUpperCase()}${firstLetters.pop()!.toUpperCase()}`
       } else {
-        this.initials = `${name.substring(0, 2)?.toUpperCase()}`
+        this.initials = name.substr(0, 2)?.toUpperCase()
       }
     }
   }

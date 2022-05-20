@@ -1,14 +1,14 @@
 import { PgUser } from '@/infra/repos/postgres/entities'
 import { app } from '@/main/config/app'
-import { makeFakeDb } from '@/tests/infra/repos/postgres/mocks'
 import { UnauthorizedError } from '@/application/errors'
+import { makeFakeDb } from '@/tests/infra/repos/postgres/mocks'
 
 import { IBackup } from 'pg-mem'
 import { getConnection } from 'typeorm'
 import request from 'supertest'
 
 describe('Login Routes', () => {
-  describe('POST /api/login/facebook', () => {
+  describe('POST /login/facebook', () => {
     let backup: IBackup
     const loadUserSpy = jest.fn()
 
@@ -21,16 +21,17 @@ describe('Login Routes', () => {
       backup = db.backup()
     })
 
-    beforeEach(() => {
-      backup.restore()
-    })
-
     afterAll(async () => {
       await getConnection().close()
     })
 
+    beforeEach(() => {
+      backup.restore()
+    })
+
     it('should return 200 with AccessToken', async () => {
       loadUserSpy.mockResolvedValueOnce({ facebookId: 'any_id', name: 'any_name', email: 'any_email' })
+
       const { status, body } = await request(app)
         .post('/api/login/facebook')
         .send({ token: 'valid_token' })
@@ -39,7 +40,7 @@ describe('Login Routes', () => {
       expect(body.accessToken).toBeDefined()
     })
 
-    it('should return 401 with UnauthorizeError', async () => {
+    it('should return 401 with UnauthorizedError', async () => {
       const { status, body } = await request(app)
         .post('/api/login/facebook')
         .send({ token: 'invalid_token' })

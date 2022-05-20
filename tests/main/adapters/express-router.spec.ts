@@ -1,8 +1,9 @@
-import { RequestHandler, NextFunction, Request, Response } from 'express'
+import { adaptExpressRoute } from '@/main/adapters'
+import { Controller } from '@/application/controllers'
+
+import { Request, RequestHandler, Response, NextFunction } from 'express'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { mock, MockProxy } from 'jest-mock-extended'
-import { Controller } from '@/application/controllers'
-import { adaptExpressRoute } from '@/main/adapters'
 
 describe('ExpressRouter', () => {
   let req: Request
@@ -12,7 +13,7 @@ describe('ExpressRouter', () => {
   let sut: RequestHandler
 
   beforeAll(() => {
-    req = getMockReq({ body: { anyBody: 'anyBody' }, locals: { anyLocals: 'anyLocals' } })
+    req = getMockReq({ body: { anyBody: 'any_body' }, locals: { anyLocals: 'any_locals' } })
     res = getMockRes().res
     next = getMockRes().next
     controller = mock()
@@ -21,13 +22,15 @@ describe('ExpressRouter', () => {
       data: { data: 'any_data' }
     })
   })
+
   beforeEach(() => {
     sut = adaptExpressRoute(controller)
   })
+
   it('should call handle with correct request', async () => {
     await sut(req, res, next)
 
-    expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'anyBody', anyLocals: 'anyLocals' })
+    expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', anyLocals: 'any_locals' })
     expect(controller.handle).toHaveBeenCalledTimes(1)
   })
 

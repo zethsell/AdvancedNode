@@ -1,37 +1,36 @@
-import { env } from '@/main/config/env'
-import { sign } from 'jsonwebtoken'
 import { PgUser } from '@/infra/repos/postgres/entities'
+import { PgConnection } from '@/infra/repos/postgres/helpers'
 import { app } from '@/main/config/app'
+import { env } from '@/main/config/env'
 import { makeFakeDb } from '@/tests/infra/repos/postgres/mocks'
-import { Repository } from 'typeorm'
 
 import { IBackup } from 'pg-mem'
-
+import { Repository } from 'typeorm'
+import { sign } from 'jsonwebtoken'
 import request from 'supertest'
-import { PgConnection } from '@/infra/repos/postgres/helpers'
 
 describe('User Routes', () => {
   let backup: IBackup
-  let pgUserRepo: Repository<PgUser>
   let connection: PgConnection
+  let pgUserRepo: Repository<PgUser>
 
   beforeAll(async () => {
+    connection = PgConnection.getInstance()
     const db = await makeFakeDb([PgUser])
     backup = db.backup()
-    connection = PgConnection.getInstance()
     pgUserRepo = connection.getRepository(PgUser)
-  })
-
-  beforeEach(() => {
-    backup.restore()
   })
 
   afterAll(async () => {
     await connection.disconnect()
   })
 
+  beforeEach(() => {
+    backup.restore()
+  })
+
   describe('DELETE /users/picture', () => {
-    it('should return 403 if no authorization header is present', async () => {
+    it('should return 403 if authorization header is not present', async () => {
       const { status } = await request(app)
         .delete('/api/users/picture')
 
@@ -39,7 +38,7 @@ describe('User Routes', () => {
     })
 
     it('should return 200 with valid data', async () => {
-      const { id } = await pgUserRepo.save({ email: 'any_email', name: 'Marcio Rodrigues' })
+      const { id } = await pgUserRepo.save({ email: 'any_email', name: 'any name' })
       const authorization = sign({ key: id }, env.jwtSecret)
 
       const { status, body } = await request(app)
@@ -47,7 +46,7 @@ describe('User Routes', () => {
         .set({ authorization })
 
       expect(status).toBe(200)
-      expect(body).toEqual({ pictureUrl: undefined, initials: 'MR' })
+      expect(body).toEqual({ pictureUrl: undefined, initials: 'AN' })
     })
   })
 
@@ -58,7 +57,7 @@ describe('User Routes', () => {
       AwsS3FileStorage: jest.fn().mockReturnValue({ upload: uploadSpy })
     }))
 
-    it('should return 403 if no authorization header is present', async () => {
+    it('should return 403 if authorization header is not present', async () => {
       const { status } = await request(app)
         .put('/api/users/picture')
 
@@ -67,8 +66,9 @@ describe('User Routes', () => {
 
     it('should return 200 with valid data', async () => {
       uploadSpy.mockResolvedValueOnce('any_url')
-      const { id } = await pgUserRepo.save({ email: 'any_email', name: 'Marcio Rodrigues' })
+      const { id } = await pgUserRepo.save({ email: 'any_email', name: 'any name' })
       const authorization = sign({ key: id }, env.jwtSecret)
+
       const { status, body } = await request(app)
         .put('/api/users/picture')
         .set({ authorization })

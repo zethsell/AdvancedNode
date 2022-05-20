@@ -1,6 +1,6 @@
-import { DbTransaction } from '@/application/contracts/db-transaction'
-import { HttpResponse } from '@/application/helpers'
+import { DbTransaction } from '@/application/contracts'
 import { Controller } from '@/application/controllers'
+import { HttpResponse } from '@/application/helpers'
 
 export class DbTransactionController extends Controller {
   constructor (

@@ -6,6 +6,7 @@ describe('UserProfile', () => {
   beforeEach(() => {
     sut = new UserProfile('any_id')
   })
+
   it('should create with empty initials when pictureUrl is provided', () => {
     sut.setPicture({ pictureUrl: 'any_url', name: 'any_name' })
 
@@ -17,7 +18,6 @@ describe('UserProfile', () => {
   })
 
   it('should create with empty initials when pictureUrl is provided', () => {
-    const sut = new UserProfile('any_id')
     sut.setPicture({ pictureUrl: 'any_url' })
 
     expect(sut).toEqual({
@@ -27,42 +27,38 @@ describe('UserProfile', () => {
     })
   })
 
-  it('should create initials with first letter of first and last name', () => {
-    const sut = new UserProfile('any_id')
-    sut.setPicture({ name: 'Marcio T Rodrigues' })
+  it('should create initials with first letter of first and last names', () => {
+    sut.setPicture({ name: 'rodrigo da silva manguinho' })
 
     expect(sut).toEqual({
       id: 'any_id',
       pictureUrl: undefined,
-      initials: 'MR'
+      initials: 'RM'
     })
   })
 
   it('should create initials with first two letters of first name', () => {
-    const sut = new UserProfile('any_id')
-    sut.setPicture({ name: 'Marcio' })
+    sut.setPicture({ name: 'rodrigo' })
 
     expect(sut).toEqual({
       id: 'any_id',
       pictureUrl: undefined,
-      initials: 'MA'
+      initials: 'RO'
     })
   })
 
   it('should create initials with first letter', () => {
-    const sut = new UserProfile('any_id')
-    sut.setPicture({ name: 'M' })
+    sut.setPicture({ name: 'r' })
 
     expect(sut).toEqual({
       id: 'any_id',
       pictureUrl: undefined,
-      initials: 'M'
+      initials: 'R'
     })
   })
 
   it('should create with empty initials when name and pictureUrl are not provided', () => {
-    const sut = new UserProfile('any_id')
-    sut.setPicture({ })
+    sut.setPicture({})
 
     expect(sut).toEqual({
       id: 'any_id',
@@ -71,7 +67,7 @@ describe('UserProfile', () => {
     })
   })
 
-  it('should create with empty initials when pictureUrl is provided', () => {
+  it('should create with empty initials when name and pictureUrl are not provided', () => {
     sut.setPicture({ name: '' })
 
     expect(sut).toEqual({

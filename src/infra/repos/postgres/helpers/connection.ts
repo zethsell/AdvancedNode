@@ -1,11 +1,14 @@
-import { createConnection, getConnection, getRepository, getConnectionManager, ObjectType, QueryRunner, Repository, Connection } from 'typeorm'
-import { ConnectionNotFoundError, TransactionNotFoundError } from '.'
+import { ConnectionNotFoundError, TransactionNotFoundError } from '@/infra/repos/postgres/helpers'
+import { DbTransaction } from '@/application/contracts'
 
-export class PgConnection {
+import { createConnection, getConnection, getConnectionManager, ObjectType, QueryRunner, Repository, Connection, getRepository } from 'typeorm'
+
+export class PgConnection implements DbTransaction {
   private static instance?: PgConnection
   private query?: QueryRunner
   private connection?: Connection
-  private constructor () { }
+
+  private constructor () {}
 
   static getInstance (): PgConnection {
     if (PgConnection.instance === undefined) PgConnection.instance = new PgConnection()

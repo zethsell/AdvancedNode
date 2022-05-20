@@ -7,7 +7,7 @@ export class Required implements Validator {
     readonly fieldName?: string
   ) {}
 
-  validate (): Error|undefined {
+  validate (): Error | undefined {
     if (this.value === null || this.value === undefined) {
       return new RequiredFieldError(this.fieldName)
     }

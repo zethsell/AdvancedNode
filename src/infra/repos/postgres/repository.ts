@@ -1,4 +1,5 @@
 import { PgConnection } from '@/infra/repos/postgres/helpers'
+
 import { ObjectType, Repository } from 'typeorm'
 
 export abstract class PgRepository {
